@@ -6,11 +6,11 @@
 
 | 目录 | 内容 |
 |------|------|
-| `deepresearch/` | **EchoGlove 科研级原理文档**（2026-08-14 自 `EchoGlove-SLR-MOCAP-Beta/docs/deepresearch/` 迁入）|
+| `research/` | **EchoGlove 科研级原理文档**（2026-08-14 自 `EchoGlove-SLR-MOCAP-Beta/docs/deepresearch/` 迁入，后改名 research/）|
 | `paper/` | 研究论文笔记（`2509FSGlove.md`、`2512OSMO.md`）|
 | `repo/` | 第三方开源仓库参考（**gitignored**，见下）|
 
-## deepresearch/ — EchoGlove 原理文档（9 主题 + index）
+## research/ — EchoGlove 原理文档（9 主题 + index）
 
 `01_signal_chain` 信号链 · `02_imu_fusion_madgwick` IMU+Madgwick（含 2026-08-11 梯度符号修正决策）· `03_hand_token_protocol` Hand Token v1 · `04_l1_edge_cnn` · `05_l2_gated_bi_cross_attn` · `06_l3_stgcn_vision` · `07_training_quant` · `08_nlp_tts` · `09_fk_mano_dual_rep` · `index.md`（全景 + 真实性总表）
 

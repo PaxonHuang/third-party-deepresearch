@@ -1,7 +1,7 @@
 # EchoGlove 科研级原理文档索引
 
-> **Date**: 2026-08-11（首版）· 2026-08-16（新增 10 + 源码深研：14 仓 git clone + 4 组并行蒸馏）
-> **Status**: 01–09 原理文档 + 10 外部生态综述（含全 paper/ 溯源 + 4 份源码蒸馏文档 + Wuji MCP）
+> **Date**: 2026-08-11（首版）· 2026-08-16（新增 10 + 源码深研：14 仓 git clone + 4 组并行蒸馏 + §11 商用触觉手册）
+> **Status**: 01–09 原理文档 + 10 外部生态综述（含全 paper/ 溯源 + 4 份源码蒸馏文档 + `usermanual/` 2 份商用触觉手册 + Wuji MCP）
 > **依据**: V6 生产设计 `docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md`（设计冻结）+ 当前代码（`glove_relay/`、`glove_firmware/`、`EgoGlove/firmware/shared/`）
 > **真实性标注**: ✅ 已实现 · 🟡 工程可实现（6–12 月）· 🔬 需研发验证 · 🌌 长期方向（与 `EgoGlove/docs/V7/ARCHITECTURE.md` §8 同分级）
 
@@ -55,7 +55,7 @@
 | 07 | `07_training_quant.md` | 训练 + INT8 量化（数据管道、checkpoint、TFLite/INT8 导出） | 量化误差界、校准集 | 🔬（无真实数据/权重） |
 | 08 | `08_nlp_tts.md` | SLR 下游：规则语法校正 + edge-tts | 规则表、音素时长模型 | 结构 ✅ / 精度 🔬 |
 | 09 | `09_fk_mano_dual_rep.md` | FK→MANO 双表示层（Hand Token 分叉） | FK 关节角→21 点、MANO 层 | 🌌 / FK 🟡 |
-| 10 | `10_dex_mocap_teleop_tactile.md` | **灵巧操作生态综述**（2026-08-16 全 paper/ 10 篇 + **14 源码仓 git clone** + 4 组并行蒸馏）：MoCap/遥操作/触觉/数据契约 | Hand Token v2(ICT 20 维源码验证)、AnyDexRetarget 自适应优化器(13 机器人手)、FSGlove HI229 IMU 协议、Wuji EMF 21-DOF、LucidGloves Alpha、DOGlove 76B UART、触觉三路线对比、5 个架构决策点 | 🔬 参考映射 |
+| 10 | `10_dex_mocap_teleop_tactile.md` | **灵巧操作生态综述**（2026-08-16 全 paper/ 10 篇 + **14 源码仓 git clone** + 4 组并行蒸馏 + **§11 商用触觉 buy vs build**）：MoCap/遥操作/触觉/数据契约 | Hand Token v2(ICT 20 维源码验证)、AnyDexRetarget 自适应优化器(13 机器人手)、FSGlove HI229 IMU 协议、Wuji EMF 21-DOF、LucidGloves Alpha、DOGlove 76B UART、触觉三路线对比、HKVT-M3A I2C 0x0A + PaXini Anti-Stray 阵列、5 个架构决策点 | 🔬 参考映射 |
 
 ---
 

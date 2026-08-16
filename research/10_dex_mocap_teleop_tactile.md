@@ -219,7 +219,7 @@ $$
 2. **腕部绝对位姿如何补**？（DexCap T265-SLAM / HumanEgo Aria-SLAM / FSGlove 外接光学）——当前 flex+单 IMU yaw 不可观。
 3. **重定向实现选优化式（AnyTeleop）还是 IK 库（Mink/MuJoCo）**？——影响 Robot Action Layer 的代码基座。
 4. **L2/L3 动作解码器选 diffusion policy 还是 flow matching**？——配合密集辅助损失。
-5. **触觉是否纳入第一代硬件**？若纳，AnySkin 式磁触觉（剪切+法向）vs FlexiTac 压阻（廉价法向）二选一；力反馈（DOGlove）标 🌌。
+5. **触觉是否纳入第一代硬件**？纳入的话路线三选（详见 §11.3 buy vs build）：A) **COTS buy**——HKVT-M3A 单点 I2C drop-in（最省事）/ PaXini PX-6AX 阵列（抗杂散磁场但 83.3Hz）；B) **开源 DIY**——AnySkin 式磁触觉（剪切+法向，400Hz，需自制）；C) **压阻**——FlexiTac（廉价法向阵列）。力反馈（DOGlove 主动）标 🌌。
 
 ---
 
@@ -242,6 +242,8 @@ $$
 | Wuji Glove (SDK) | [docs](https://docs.wuji.tech) | `repo/wuji-sdk/` | `4f7e8bf` (v2026.8.3) |
 | Wuji Glove (CLI) | — | `repo/wuji-cli/` | `76766c8` (v2026.8.3) |
 | Wuji Glove (Description) | — | `repo/wuji-description/` | `06e5f14` (v2026.8.14) |
+| HKVT-M3A 指尖触觉（航凯） | — | `usermanual/HKVT-M3A_指尖触觉传感器用户手册.md` | Ver.01 |
+| PaXini PX-6AX GEN3（帕西尼） | https://www.paxini.com | `usermanual/PaXini_PX-6AX_GEN_3_Series.md` | GEN3 |
 
 **新增源码蒸馏文档**（`paper/` 目录）:
 
@@ -354,3 +356,35 @@ Encoder: V_raw / V_ref × 360° → ±7.2° raw, 外部高精编码器校正表 
 - USB CDC 设备名: "BowieGlove"
 - 线程化 `BowieGloveStream` + `queue.Queue` 异步读取
 - 管线: Bowie 手套 → HaMeR 关键点 → Psyonic Ability Hand 重定向 → diffusion policy
+
+## 11. 商用触觉传感器（buy 路线，2026-08-16 新手册）
+
+> 来源：`usermanual/HKVT-M3A_指尖触觉传感器用户手册.md` + `usermanual/PaXini_PX-6AX_GEN_3_Series.md`
+
+### 11.1 HKVT-M3A（苏州航凯，单点 3 轴 I2C 指尖触觉）✅ 规格来源：手册
+
+- **规格**：法向 Fz=15N + 切向 Fx/Fy=10N，精度 2%FS，安全过载 400%；硅胶表面；2.5-3.3V；200Hz 采样。
+- **接口**：I2C 从机 **0x0A**（7-bit），400kHz；4P 下翻盖 FPC（AFC42-S04FMA-1H）；自带上拉可直连 MCU。
+- **协议**：命令 `0x03` 读 6 字节（XYZ 各 2 字节 signed int16，**小端**）；`0x1A` 写改 I2C 地址（Flash 持久，勿设 0xFF/0x00）。
+- **踩坑**：上电校准约 1s；**需周期性清零（零点漂移）**；明示避免强磁场/尖锐物/高温高湿环境。
+
+### 11.2 PaXini PX-6AX GEN3（帕西尼，Hall 阵列多轴触觉）✅ 规格来源：手册
+
+- **原理**：半柔双层——形变层（压力→磁场畸变）+ 刚性传感层（Hall + 算法），**内置 Anti-Stray 抗杂散磁场功能**（算法剥离环境磁场干扰）→ 直接回应 ReSkin/AnySkin/OSMO 的环境磁敏感短板。
+- **阵列**：12 型号（Elite/Core/Omega），指尖 25-135 taxel、手掌 9、大 CP 239 taxel，每 taxel 三轴；空间分辨率 1mm；量程 Fz 0~25N / Fxy ±10N；精度 1%FS；最小 0.1N；寿命 10M+ 次。
+- ⚠️ **输出频率仅 83.3Hz**（低于 100Hz 实时控制需求）；电流 100-700mA；供电 3-5V。
+- **三协议**（上电 CS3/CS2/CS1 引脚选通，运行中不变）：SPI(CPOL=High/CPHA=2Edge/MSB 优先，CLK 串 51Ω) / UART(921600 8N1，请求-响应) / I2C(≤200kHz，4.7k 上拉)。
+- **帧格式**：`55 AA | len(2B LE) | dev_addr(=module+1) | 00 | 0xFB(读)/0x79(写) | start_addr(4B LE) | data_len(2B LE) | [data] | LRC`；读响应回 `AA 55`。与项目 `uart_frame.h`（0xAA 0x55 + CRC）帧头同构。
+- **寄存器**：0x79 用户区（addr3=校准置 1）；0x7B 应用区（**1008/1009/1010=合力 Fx/Fy/Fz** 各 1B，Fz=值×0.1N；**1038+=逐 taxel Fx/Fy/Fz** 各 1B，单字节：Fx/Fy -128~+127，Fz 0~255）。
+
+### 11.3 buy vs build（对架构决策点⑤的直接输入）
+
+| 维度 | HKVT-M3A | PaXini PX-6AX | 开源 DIY（AnySkin/OSMO） | FlexiTac |
+|---|---|---|---|---|
+| 轴/规模 | 3 轴单点 | 3 轴阵列(9-239) | 3 轴磁（剪切+法向） | 法向阵列 |
+| 采样率 | 200Hz | **83.3Hz** ⚠️ | 400Hz | 100Hz |
+| 抗环境磁场 | ❌（明示避免） | ✅ **Anti-Stray** | ❌（环境铁磁敏感） | ✅（压阻不敏感） |
+| 接口 | I2C 0x0A | SPI/UART/I2C（需通信板） | 定制 STM32→USB | Arduino→USB |
+| 集成成本 | 低（drop-in） | 中高 | 高（自制） | 低 |
+
+**结论**：① 若第一代硬件要"低成本加 1-2 个指尖触觉点"，**HKVT-M3A 是最高性价比 drop-in**——S3 已有 I2C 总线，0x0A 与 LSM6DSV16X(0x6A) 不冲突；② 若需覆盖整个手面做接触定位/纹理，PaXini 阵列是 buy 路线的正解，但 83.3Hz 限制其用于动态控制（分类/接触状态足够）；③ 400Hz 高带宽触觉（滑移/动态）仍需开源 DIY 路线（AnySkin/OSMO）；④ 触觉（接触力）与 LSM6DSV16X（运动）在传感器层正交——决策点⑤的选型弹药在此。

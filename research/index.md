@@ -2,7 +2,7 @@
 
 > **Date**: 2026-08-11（首版）· 2026-08-16（新增 10 + 源码深研：14 仓 git clone + 4 组并行蒸馏 + §11 商用触觉手册）
 > **Status**: 01–09 原理文档 + 10 外部生态综述（含全 paper/ 溯源 + 4 份源码蒸馏文档 + `usermanual/` 2 份商用触觉手册 + Wuji MCP）
-> **依据**: V6 生产设计 `docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md`（设计冻结）+ 当前代码（`glove_relay/`、`glove_firmware/`、`EgoGlove/firmware/shared/`）
+> **依据**: 历史生产设计（V6/V7 阶段）+ 当前代码（`EgoGlove/relay/`、`EgoGlove/firmware/shared/`）。注：早期依据文件 `docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md` 已不在实现仓，以当前代码与 `EgoGlove/docs/V7` 为准。
 > **真实性标注**: ✅ 已实现 · 🟡 工程可实现（6–12 月）· 🔬 需研发验证 · 🌌 长期方向（与 `EgoGlove/docs/V7/ARCHITECTURE.md` §8 同分级）
 
 ---

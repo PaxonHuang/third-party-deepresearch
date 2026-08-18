@@ -10,11 +10,11 @@
 | `paper/` | 研究论文笔记（`2509FSGlove.md`、`2512OSMO.md`）|
 | `repo/` | 第三方开源仓库参考（**gitignored**，见下）|
 
-## research/ — EchoGlove 原理文档（9 主题 + index）
+## research/ — EchoGlove 原理文档（10 主题 + index）
 
-`01_signal_chain` 信号链 · `02_imu_fusion_madgwick` IMU+Madgwick（含 2026-08-11 梯度符号修正决策）· `03_hand_token_protocol` Hand Token v1 · `04_l1_edge_cnn` · `05_l2_gated_bi_cross_attn` · `06_l3_stgcn_vision` · `07_training_quant` · `08_nlp_tts` · `09_fk_mano_dual_rep` · `index.md`（全景 + 真实性总表）
+`01_signal_chain` 信号链 · `02_imu_fusion_madgwick` IMU+Madgwick（含 2026-08-11 梯度符号修正决策）· `03_hand_token_protocol` Hand Token v1 · `04_l1_edge_cnn` · `05_l2_gated_bi_cross_attn` · `06_l3_stgcn_vision` · `07_training_quant` · `08_nlp_tts` · `09_fk_mano_dual_rep` · `10_dex_mocap_teleop_tactile`（外部生态综述）· `index.md`（全景 + 真实性总表）
 
-> 每篇含 LaTeX 核心公式 + 带张量维度的科研级 ASCII 网络图 + 四级真实性标注（✅/🟡/🔬/🌌）。依据 `EgoGlove/docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md` 与当前代码。
+> 每篇含 LaTeX 核心公式 + 带张量维度的科研级 ASCII 网络图 + 四级真实性标注（✅/🟡/🔬/🌌）。依据历史生产设计与当前代码（`EgoGlove/firmware/shared/`、`relay/`）。默认 RESEARCH 状态，除非有新 source of truth 替代。
 
 ## repo/ — 第三方源码参考（gitignored，从上游重新获取）
 

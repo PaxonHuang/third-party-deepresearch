@@ -3,3 +3,4 @@ repo/
 
 # Windows zone-identifier metadata (junk)
 *:Zone.Identifier
+*Zone.Identifier

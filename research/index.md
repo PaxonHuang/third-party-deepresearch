@@ -56,6 +56,7 @@
 | 08 | `08_nlp_tts.md` | SLR 下游：规则语法校正 + edge-tts | 规则表、音素时长模型 | 结构 ✅ / 精度 🔬 |
 | 09 | `09_fk_mano_dual_rep.md` | FK→MANO 双表示层（Hand Token 分叉） | FK 关节角→21 点、MANO 层 | 🌌 / FK 🟡 |
 | 10 | `10_dex_mocap_teleop_tactile.md` | **灵巧操作生态综述**（2026-08-16 全 paper/ 10 篇 + **14 源码仓 git clone** + 4 组并行蒸馏 + **§11 商用触觉 buy vs build**）：MoCap/遥操作/触觉/数据契约 | Hand Token v2(ICT 20 维源码验证)、AnyDexRetarget 自适应优化器(13 机器人手)、FSGlove HI229 IMU 协议、Wuji EMF 21-DOF、LucidGloves Alpha、DOGlove 76B UART、触觉三路线对比、HKVT-M3A I2C 0x0A + PaXini Anti-Stray 阵列、5 个架构决策点 | 🔬 参考映射 |
+| 11 | `11_multimodal_pose_architecture_lessons.md` | Demo2A/Demo2B 多模态姿态架构蒸馏：标定、时间、视觉/触觉 measurement responsibility、canonical representation、许可证边界 | Timestamp + Extrinsic + Calibration + Quality + Provenance + Canonical state；6-axis yaw、wrist camera、flex/tactile、MANO 与下游 adapter 边界 | 🔬 内部蒸馏 |
 
 ---
 

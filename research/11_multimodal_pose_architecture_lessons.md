@@ -1,63 +1,118 @@
 # 11. Multimodal Pose Architecture Lessons
 
-> 状态：EgoGlove 内部 research distillation；不是第三方事实的替代品。
-> 日期：2026-09-05
-> 用途：为 Demo2A Multimodal Pose Architecture Spec v0.1 提供可追溯的长期工程经验。
+> Status: 🔬 source-grounded third-party research distillation; not an EgoGlove implementation claim.
+> Updated: 2026-09-07
+> Purpose: bounded evidence for Demo2A/Demo2B architecture review.
+> Isolation: upstream source snapshots remain in `third-party-deepresearch/repo/`, are not copied into EgoGlove, and are not included in the EgoGlove CodeBaseMemory/graph index.
 
-## 1. 证据边界与目录职责
+## 1. Evidence and license discipline
 
-本摘要只蒸馏仓库已有 `third-party-deepresearch/paper/`、`repo/`、`research/` 与 EgoGlove V8 文档中的结论。`research/` 保存跨来源原理与限制；`advicebyAI/` 保存项目适配建议；`repo/` 是第三方源码/资料快照，不等于 EgoGlove 已接入。论文和第三方报告中的精度数字不是 EgoGlove 本地验证结果。
+This document distinguishes:
 
-## 2. 对 Demo2 架构有直接影响的经验
+- **Source-supported fact:** directly observed in pinned upstream source, README, license, or official documentation.
+- **Project inference:** an architectural implication for EgoMotion, not an upstream promise.
+- **AI engineering advice:** kept separately in `advicebyAI/`; it is not source fact.
+- **Unverified hypothesis:** requires local fixture, hardware, or data.
 
-### Calibration and observability
+Repository code, model/checkpoint, dataset, hardware design, simulation, and robot assets are separately licensed. Visibility of a GitHub repository or paper never grants commercial reuse.
 
-- **FSGlove / DiffHCal**：sensor-to-bone calibration 是一级问题；安装误差应作为显式 calibration object，而不是假设 PCB axis 等于 anatomical bone axis。可微 fitting 可联合估计安装误差、手型和运动，但论文报告的误差不能转写为 EgoGlove 性能承诺。
-- **Kalibr / GTSAM / VINS-Mono**：当前本地 corpus 没有足够的一手条目，不能声称 EgoGlove 已采用这些工具。本 Spec 只冻结 camera–IMU temporal/spatial calibration、factor responsibility 和 sliding-window 可替换接口，不冻结具体库。
-- **Project Aria / HumanEgo**：timestamp、calibration、container/health 和可追溯数据组织值得借鉴；这证明 HumanEgo 使用 Aria 数据管线，不证明 EgoGlove 已接入 Aria，也不赋予其模型/数据许可。
+## 2. Source-supported lessons
 
-### Vision and multimodal measurements
+### 🔬 FSGlove — calibration is a first-class system problem
 
-- **MediaPipe / HaMeR / WiLoR / HumanEgo**：视觉输出应作为带 confidence、visibility、occlusion 和模型 provenance 的 measurement。wrist-mounted camera 对局部 articulation、遮挡修正和 contact/object context 有价值，但不能天然提供 global wrist 6DoF。
-- **FlexiTac / 3D-ViTac**：触觉更适合表达 contact probability、pressure/force、centroid、normal 和 quality；不得把 tactile 直接升格为 joint-angle truth。当前 `repo/FlexiTac/` 主要是研究 gallery/资料，不是可直接复用的完整传感器实现。
-- **hand-tracking-fusion-system / AnyHand / xio Fusion**：本地没有足够证据，不能写成已研究、已验证或已接入方案。
+**Pinned source:** `https://github.com/davidliyutong/fsglove/tree/a7988f051c35f5ee6157353ee4022d73aa1e4cc8`, 2026-05-05. Repository contains no root `LICENSE`/`COPYING`/`NOTICE`; code reuse permission is therefore **not established**.
 
-### Representation and downstream boundaries
+**Source-supported fact:** README describes inertial hand tracking with IMUs on finger joints/dorsum, up to 48 DoF, and a DiffHCal approach that jointly considers kinematics, shape parameters, and sensor misalignment. Its protocol preserves sensor ID, accel/gyro/mag, quaternion, pressure, device ticks, timestamp, sequence, and validity.
 
-- **AnyTeleop / Dex-Retargeting**：属于 human→robot projection/adapter；指尖/关键点等可作为跨 embodiment 的输入，但 retargeting 的机器人约束不应反向定义 Canonical Human Hand State。
-- **UMI / RLDS / LeRobot**：EgoGlove V8 已把 Episode、Provenance 和 RLDS/LeRobot 作为 downstream projection boundary；本轮不实现 exporter、训练 pipeline 或 LeRobot 接入。
-- **MANO**：MANO 可作为 derived/projected mesh or fitting representation；不能成为传感器真值或 canonical core。MANO 单独许可证/非商业约束必须与代码、checkpoint、数据许可分开登记。
+**Source-supported fact:** FSGlove is a materially different 16-IMU system with optional optical/Vive wrist references and host-side MANO-related calibration. Its reported project-page numbers are not EgoMotion measurements.
 
-## 3. 不可丢失的架构结论
+**Source-supported license fact:** MANO assets must be downloaded under the MANO license; that license is non-commercial/non-redistributable for the stated model/data/sample-code terms. NOKOV, RFUniverse, Shadow Hand, datasets, and other visualizer assets require separate verification.
 
-1. 6-axis IMU 的 gravity 主要约束 roll/pitch；无磁情况下 yaw 长期不可绝对观测，只能是 relative/drifting，除非有外部/VIO/SLAM/reference source。
-2. Sensor-to-bone extrinsic 是一级资产；`T_B^S`、`T_I^C` 必须来自 CalibrationArtifact，PCB/FPC axis 不能作为默认 bone axis。柔性材料变形导致 `T_B^S(t)` 时，固定外参假设失效。
-3. Raw measurements、derived observations 和 final canonical pose 分层保存；host receive timestamp 不能冒充 sampling timestamp；clock domain 必须显式建模 offset 与 skew/drift。
-4. Flex 是 bend constraint/measurement model；FlexiTac 是 contact/pressure/quality observation。
-5. MANO 是 projection/model adapter，不是 canonical truth。
-6. 长期可复用资产优先级是 **Timestamp + Extrinsic + Calibration + Quality + Provenance + Canonical representation**，而不是 IMU 数量本身。
+**Project inference:** sensor-to-bone extrinsic, morphology, joint-axis assumptions, and optional external root reference must remain separate calibration artifacts; a board axis is not an anatomical axis.
 
-## 4. 许可证与依赖风险
+### 🔬 Kalibr — camera/IMU spatial-temporal calibration categories
 
-- FSGlove 本地论文/README 说明与源码许可完整性不能混为一谈；在缺少明确 LICENSE 时只研究思想，不复制源码/硬件设计。
-- MANO 许可限制非商业科研/教育/艺术用途；HumanEgo 使用 PolyForm Noncommercial；模型 checkpoint、数据集、代码和 robot assets 必须分别核查。
-- AnyDexRetarget/Dex-Retargeting 主代码许可相对清晰，但机器人 URDF/mesh/asset 可能是混合许可。
-- FlexiTac gallery 的收录不代表条目代码或硬件可复用。
+**Pinned source:** `https://github.com/ethz-asl/kalibr` at local snapshot `1f60227442d25e36365ef5f72cd80b9666d73467`; BSD 3-clause-style repository license.
 
-## 5. 对本项目的落点
+**Source-supported fact:** Kalibr documents multi-camera intrinsics/extrinsics, camera–IMU spatial and temporal calibration with IMU intrinsics, IMU–IMU spatial/temporal calibration with camera aid, and rolling-shutter intrinsic calibration including shutter parameters.
 
-以上经验已被蒸馏到 `docs/superpowers/specs/2026-09-05-demo2a-multimodal-pose-architecture-v0.1.md` 的 coordinate/timestamp/topology/calibration/factor/canonical-state/compatibility/gate 章节。本文不声称任何 Demo2A hardware、ground truth、solver 或 accuracy gate 已完成。
+**Project inference:** a camera branch must preserve intrinsic/distortion/readout model, `T_I^C`, temporal offset, calibration evidence, residual, and validity interval. Flexible wearable mounting/re-donning validity is not solved merely by invoking a camera–IMU calibration tool.
 
-## 6. 主要本地来源
+### 🔬 GTSAM — factor graph framing is not an EgoMotion solver contract
 
-- `third-party-deepresearch/research/10_dex_mocap_teleop_tactile.md`
-- `third-party-deepresearch/paper/2509FSGlove.md`
-- `third-party-deepresearch/paper/2604.28156v1FlexiTac.md`
-- `third-party-deepresearch/paper/2307.04577AnyTeleop.md`
-- `third-party-deepresearch/paper/2605.24934v2_HumanEgoZero.md`
-- `third-party-deepresearch/repo/fsglove/`
-- `third-party-deepresearch/repo/FlexiTac/`
-- `third-party-deepresearch/repo/HumanEgo/`
-- `EgoGlove/docs/V8/00_HUMAN_MOTION_INFRASTRUCTURE.md`
-- `EgoGlove/docs/V8/03_EPISODE_MODEL.md`
-- `EgoGlove/docs/V8/04_PROVENANCE_MODEL.md`
+**Pinned source:** `https://github.com/borglab/gtsam` at local snapshot `8be77851e956f2087600950ac1b936e0d340440c`; BSD repository license.
+
+**Source-supported fact:** GTSAM describes smoothing/mapping with factor graphs and Bayes networks; its documented generic workflow is build factor graph, linearize/solve in tangent spaces, retract to manifolds, iterate.
+
+**Evidence limitation:** the reviewed material does not establish an EgoMotion fixed-lag/sliding-window policy, factor residuals, calibration gates, or acceptance metrics.
+
+**Project inference:** factor names alone are insufficient; residual frame/dimension, covariance units/order, time association, calibration dependencies, robust loss, and failure gate must be explicit before any solver choice.
+
+### 🔬 manotorch / MANO — downstream parametric projection only
+
+**Pinned source:** `https://github.com/lixiny/manotorch` at local snapshot `a2a70c591f91551078b7bb2af9b5d9f275b626e0`; repository labelled Apache-2.0.
+
+**Source-supported fact:** manotorch describes a differentiable mapping from hand pose/shape parameters to vertices, joints, and transforms. Its README describes 778 vertices, 21 joints, 16 articulation transforms, root-relative meters, and required separately downloaded MANO assets.
+
+**License boundary:** repository code terms do not grant MANO model/data terms. MANO must be registered/downloaded separately and is not a commercial/re-distributable default dependency.
+
+**Project inference:** MANO is optional projection/fitting data with its own fit residual and provenance; it cannot define Canonical Human Hand State.
+
+### 🔬 hand-tracking-fusion-system — a baseline prototype, not accuracy evidence
+
+**Pinned source:** `https://github.com/alexandertianlin/hand-tracking-fusion-system/tree/165f40d0b7593884514eb80a68c58bb455637d43`, 2026-07-14; MIT code repository.
+
+**Source-supported fact:** README describes a RealSense/vision plus six-IMU/tactile glove prototype, per-finger confidence gating, orientation gating, a Slerp complementary fusion path, and open-palm calibration.
+
+**Evidence limitation:** the same README states MPJPE, PA-MPJPE, and drift-reduction evaluation are pending. Claimed latency/thresholds are self-described prototype settings, not transferable performance evidence.
+
+**Project inference:** a Demo2A Slerp baseline may be useful only as an explicitly bounded baseline. Its thresholds, calibration routine, sensor count, camera model, and output quality cannot become canonical semantics.
+
+### 🔬 xio Fusion — AHRS failure/bias semantics deserve first-class representation
+
+**Pinned source:** `https://github.com/xioTechnologies/Fusion/tree/9325424011892abacc0ce42b8bb1a8ae20264b9b`, tag `v1.3.3`, 2026-08-30; MIT.
+
+**Source-supported fact:** this embedded C/Python AHRS provides quaternion, gravity, linear/earth acceleration; documented settings include gyro+accel with optional magnetometer/external heading, startup ramp, acceleration/magnetic rejection, overrange recovery, stationary bias estimation, NWU/ENU/NED conventions, and 24 orthogonal axis remaps. It states that intrinsic/magnetic calibration parameters must be provided externally.
+
+**Project inference:** gyro/accelerometer bias, scale/misalignment, axis remap, sample-period error, rejection/overrange/startup state, and temperature/range validity must live in calibration/quality/state contracts. AHRS output is a derived orientation observation, not hand joint truth.
+
+### 🔬 MediaPipe — vision is a measurement producer, not canonical truth
+
+**Pinned source:** `https://github.com/google-ai-edge/mediapipe/tree/c17b2a83e8944d2811889a2a08d629c20bcb6ed8`; Apache-2.0 code.
+
+**Source-supported fact:** MediaPipe provides packet/graph/calculator-oriented cross-platform ML infrastructure and task/model workflows.
+
+**License boundary:** model binaries, model cards, training data, and web/demo assets require independent verification; the repository license alone is not enough.
+
+**Project inference:** landmark position/confidence/visibility/occlusion is a camera observation with image/exposure/inference timing and source-profile provenance. It is not a global wrist pose or Canonical State by default.
+
+### 🔬 FlexiTac — tactile is exteroceptive contact evidence
+
+**Pinned sources:** paper `https://arxiv.org/abs/2604.28156` (paper page CC BY 4.0); hardware `https://github.com/FlexiTac/FlexiTac_Hardware_Repo` at `e006b179e89b79be28dd7062c5dd75ed866e5e7a` (CC BY-NC 4.0); PyFlexiTac `https://github.com/WT-MM/PyFlexiTac` at `dc2e1c6607a1b1a0e4b196bb4e2d4ccdc1afdcb0` (MIT). IsaacSim repository-wide license and dataset/asset terms remain unverified.
+
+**Source-supported fact:** upstream describes flexible piezoresistive FPC–Velostat–FPC tactile modules; hardware documents a `16×32` raw frame with `AA 55` header plus 512 `uint8` samples and a 100 Hz serial stream. PyFlexiTac describes `read() -> FlexiTacFrame(seq, timestamp_s, raw, normalized)` and a per-pixel median baseline over initial frames; its runtime defaults may differ from hardware dimensions.
+
+**License boundary:** CC BY-NC hardware is not a default commercial reuse path. MIT PyFlexiTac does not grant hardware, dataset, robot, or simulation asset rights.
+
+**Project inference:** tactile raw frame geometry, scan time, baseline/normalization, saturation, spatial calibration, and contact-region mapping must be retained. Derived contact/pressure/centroid/normal are not joint-angle truth.
+
+## 3. Architecture consequences supported by the sources
+
+1. IMU/camera spatial-temporal calibration needs explicit parameter, residual, uncertainty, validity, and mounting assumptions. Source: Kalibr; wearable validity is a project inference.
+2. An estimator cannot be described only by its solver name. Factor/state/measurement/covariance/quality contracts are portable; a particular library is not. Source: GTSAM/xio Fusion; contract conclusion is project inference.
+3. IMU-derived orientation needs bias/rejection/overrange/startup/timing semantics. Source: xio Fusion.
+4. Vision and tactile branches are measurements with confidence/quality/time/profile metadata; neither implies canonical global pose or joint truth. Source: MediaPipe/FlexiTac/hand-tracking-fusion-system.
+5. Sensor-to-bone/morphology/misalignment calibration is not optional. Source: FSGlove; transfer to EgoMotion remains a project inference requiring local validation.
+6. MANO must remain a separately licensed downstream projection. Source: manotorch/MANO license.
+
+## 4. Explicit gaps and prohibited claims
+
+- No reviewed source proves EgoMotion’s 5+1 or 10+1 accuracy, latency, calibration repeatability, global wrist pose, or observability rank.
+- No reviewed source licenses all of its code, models, datasets, hardware, and robot assets under one reusable commercial term.
+- No source justifies treating host receive time as source event time.
+- No source justifies treating tactile/flex as absolute joint-angle truth.
+- No source makes an extra IMU independently informative without distinct rigid-segment placement, calibration, and timing evidence.
+
+## 5. Local relationship
+
+This research informs the architecture gate in `EgoGlove/docs/superpowers/specs/2026-09-07-demo2a-multimodal-pose-architecture-second-review.md`. It does not claim any source has been adopted or implemented by EgoGlove.

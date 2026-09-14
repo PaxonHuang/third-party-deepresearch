@@ -58,6 +58,7 @@
 | 10 | `10_dex_mocap_teleop_tactile.md` | **灵巧操作生态综述**（2026-08-16 全 paper/ 10 篇 + **14 源码仓 git clone** + 4 组并行蒸馏 + **§11 商用触觉 buy vs build**）：MoCap/遥操作/触觉/数据契约 | Hand Token v2(ICT 20 维源码验证)、AnyDexRetarget 自适应优化器(13 机器人手)、FSGlove HI229 IMU 协议、Wuji EMF 21-DOF、LucidGloves Alpha、DOGlove 76B UART、触觉三路线对比、HKVT-M3A I2C 0x0A + PaXini Anti-Stray 阵列、5 个架构决策点 | 🔬 参考映射 |
 | 11 | `11_multimodal_pose_architecture_lessons.md` | Demo2A/Demo2B 多模态姿态架构蒸馏：标定、时间、视觉/触觉 measurement responsibility、canonical representation、许可证边界 | Timestamp + Extrinsic + Calibration + Quality + Provenance + Canonical state；6-axis yaw、wrist camera、flex/tactile、MANO 与下游 adapter 边界 | 🔬 内部蒸馏 |
 | 12 | `2026-09-07-demo2a-upstream-source-manifest.md` | Demo2A 第二轮审计上游证据 manifest：版本、许可、隔离与复用边界 | FSGlove/Kalibr/GTSAM/manotorch/vision/tactile sources 的 pinned evidence；代码/模型/数据/硬件/资产许可证分离 | 🔬 参考索引 |
+| 13 | `12_ads1115_evt0_candidate.md` | **ADS1115 16-bit I²C ADC**（TI SBAS448，2026-09-14）：Demo2A EVT0 tactile acquisition 的 prototype/candidate 评估 | 4ch I²C vs 16ch SPI 架构边界、PGA/DR/ENOB、f_frame 计算（≈30–45 帧/s 单模块上限，非 PASS）、接入拓扑、驱动契约、7 条踩坑 | 🔬 datasheet-derived，待实测 |
 
 ---
 

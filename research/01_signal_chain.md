@@ -1,5 +1,8 @@
 # 01 · 信号链：从传感器到 46 类预测的完整数据路径
 
+> **2026-09-27 applicability:** The signal chain and latency table below describe a historical design. They do not require every digital input to traverse one MCU, or prove a current latency target. Budget each physical link and isolate acquisition from inference. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
+
 > **Date**: 2026-08-11 ｜ **依据**: 生产设计 `docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md` + 当前代码 ｜ **真实性**: ✅ flex / 🟡 IMU / 🟡 79B 上链
 
 ---

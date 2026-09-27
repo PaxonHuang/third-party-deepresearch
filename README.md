@@ -1,5 +1,10 @@
 # third-party-deepresearch — EchoGlove 研究资料集
 
+## Current research navigation (2026-09-27)
+
+[Edge acquisition and timestamp lessons](research/13_edge_acquisition_transport_timing.md) distinguish transport budgets, host scheduling and source-time evidence. Earlier signal-chain diagrams and ADC evaluations are dated research, not a current deployment specification. Public updates must avoid adding private inventory, wiring, procurement or capture details.
+
+
 跨会话共享的研究资料（非产品仓；产品代码在 `../EgoGlove` 与 `../EchoGlove-SLR-MOCAP-Beta`）。
 
 ## 结构

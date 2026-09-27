@@ -4,3 +4,7 @@ repo/
 # Windows zone-identifier metadata (junk)
 *:Zone.Identifier
 *Zone.Identifier
+
+# Local knowledge indexes; generated from public sources only
+graphify-out/
+.codebase-memory/

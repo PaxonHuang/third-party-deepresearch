@@ -1,5 +1,8 @@
 # 11. Multimodal Pose Architecture Lessons
 
+> **2026-09-27 applicability:** Clock-mapping and calibration recommendations below are supplemented by transport-specific evidence rules: response/readout/arrival time cannot be promoted to native sample time, and host sequence cannot establish sensor completeness. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
+
 > Status: 🔬 source-grounded third-party research distillation; not an EgoGlove implementation claim.
 > Updated: 2026-09-07
 > Purpose: bounded evidence for Demo2A/Demo2B architecture review.

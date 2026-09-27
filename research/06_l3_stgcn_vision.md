@@ -1,5 +1,8 @@
 # 06 · L3 视觉侧 ST-GCN（时空图卷积，世界态）
 
+> **2026-09-27 applicability:** Vision inference completion is distinct from image exposure and host dequeue. Isolate inference from device reading and raw storage; a model pipeline does not establish synchronization. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
+
 > **Date**: 2026-08-11 ｜ **依据**: `glove_relay/src/models/stgcn_model.py` + `model_config.yaml`（`stgcn_v1` catalog）｜ **真实性**: 结构 ✅ / 权重 🔬 / 视觉集成 🌌
 
 ---

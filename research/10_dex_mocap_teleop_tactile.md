@@ -1,5 +1,8 @@
 # EchoGlove 灵巧操作生态研究综述（MoCap / 遥操作 / 触觉 / 数据契约）
 
+> **2026-09-27 applicability:** Portable tactile/CV acquisition requires explicit transport and time evidence; an RTOS, a common MCU or a high advertised bus bitrate does not by itself prove fresh samples, synchronization or task accuracy. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
+
 > **Date**: 2026-08-16（首版）· 2026-08-16（源码深研更新：全 14 仓 git clone + 4 组并行子代理源码蒸馏）
 > **Status**: 全 paper/ 目录 10 篇论文 + 14 个源码仓深度研究（`third-party-deepresearch/repo/`）；新增 4 份源码蒸馏文档
 > **真实性标注**: ✅ 已实现/源码验证 · 🟡 工程可实现 · 🔬 需研发验证 · 🌌 长期方向

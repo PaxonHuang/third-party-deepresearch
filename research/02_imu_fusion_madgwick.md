@@ -1,5 +1,8 @@
 # 02 · IMU 融合：LSM6DSV16X + Madgwick 梯度下降 AHRS
 
+> **2026-09-27 applicability:** Algorithm sample interval must correspond to the event represented by the input. Host receive spacing and polling frequency are not automatically sensor sample timing or freshness evidence. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
+
 > **Date**: 2026-08-11 ｜ **依据**: 生产设计 §4 + `EgoGlove` M2 计划 `2026-08-11-lite-lsm6dsv16x-madgwick.md` ｜ **真实性**: 驱动 🟡 / 算法 ✅(host) / SFLP quat 上链 🟡
 
 ---

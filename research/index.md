@@ -1,5 +1,10 @@
 # EchoGlove 科研级原理文档索引
 
+## Transport and time evidence update — 2026-09-27
+
+Read [13: edge acquisition, transport and timing](13_edge_acquisition_transport_timing.md) before applying any historical architecture or rate claim below. Independent serial links, native USB, hardware-timed acquisition and source-event timestamps must be assessed separately. The [ADS1115 note](12_ads1115_evt0_candidate.md) is historical and inactive, not a current build instruction.
+
+
 > **Date**: 2026-08-11（首版）· 2026-08-16（新增 10 + 源码深研：14 仓 git clone + 4 组并行蒸馏 + §11 商用触觉手册）
 > **Status**: 01–09 原理文档 + 10 外部生态综述（含全 paper/ 溯源 + 4 份源码蒸馏文档 + `usermanual/` 2 份商用触觉手册 + Wuji MCP）
 > **依据**: 历史生产设计（V6/V7 阶段）+ 当前代码（`EgoGlove/relay/`、`EgoGlove/firmware/shared/`）。注：早期依据文件 `docs/superpowers/specs/2026-08-10-egoglove-aligned-production-design.md` 已不在实现仓，以当前代码与 `EgoGlove/docs/V7` 为准。

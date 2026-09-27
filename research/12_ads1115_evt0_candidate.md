@@ -1,8 +1,11 @@
-# ADS1115 — 16-bit I²C ADC（Demo2A EVT0 tactile candidate 评估）
+# ADS1115 — historical 16-bit I²C ADC candidate evaluation (inactive)
+
+> **2026-09-27 applicability:** **Historical candidate, inactive.** The dated evaluation below is retained as a research record. It is not a current procurement, wiring or firmware instruction and does not authorize adoption of an ADC or a private project topology. See [transport and timing lessons](13_edge_acquisition_transport_timing.md).
+
 
 > **提炼日期**: 2026-09-14 · **提炼人**: PaxonHuang <quenchkidney@outlook.com>
 > **上游**: TI SBAS444E datasheet（ADS1113/1114/1115，MAY 2009 – REVISED 2024-12），官方 PDF 已入库：`/home/EchoGloveHugeProjects/datasheet/TI_ADS1115_SBAS448_datasheet.pdf`（commit `199896f`）。
-> **角色**: Demo2A EVT0 tactile acquisition 的 **prototype/candidate ADC**（用户 2026-09-14 批准，手头已有实物）。
+> **历史角色**: 2026-09-14 的 prototype/candidate 评估；当前非活动，不作采购或接线指令。
 > **架构边界（不得推翻）**: EVT0 选定架构是 **external 16-channel ADC + 4:1 analog row switch**（`demo2a-evt0-electrical-decision.md` §4）。ADS1115 是 **4 通道 I²C ADC**，与 16 通道 SPI ADC 能力**不等价**；本篇评估其作为 EVT0 实验垫脚石的适配性，不作为最终架构答案。
 
 ## 0. 结论速览（.datasheet-derived，全部待实测复核）

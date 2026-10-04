@@ -1,5 +1,19 @@
 # EchoGlove 科研级原理文档索引
 
+## Partial-view event pipeline
+
+Read [14: partial-view multimodal pipeline](14_partial_view_multimodal_pipeline.md) for controlled view experiments, independently reviewed contact/action labels, group splits and deployment evidence. It is a generic research protocol, not implemented training or hardware acceptance. The system overview and capability table below are historical snapshots; use current implementation evidence before making capability claims. Wrist-worn pose/pressure is prior art, including WristPP, and requires novelty checks.
+
+### Current software evidence clarification
+
+The historical v1-only/“v2 long-term” and “FK engineering feasible” rows below do not describe the current implementation evidence. Keep their original research context while applying these narrower corrections:
+
+| Asset | Current supported statement | Limit |
+|---|---|---|
+| Hand Token v2 and FK21 | ✅ C/Python codec, canonical rotation topology, derived positional view and golden/FK tests | Protocol/kinematic evidence, not measured hand-pose accuracy |
+| V8 semantic layer | ✅ Offline Observation/Coordinate/Profile/Provenance fixtures and validators | Runtime Episode pipeline/exporters remain unimplemented |
+| Historical L1/L2/L3 networks | ✅ Structural code with random-weight examples | Not evidence of trained checkpoints or task accuracy |
+
 ## Transport and time evidence update — 2026-09-27
 
 Read [13: edge acquisition, transport and timing](13_edge_acquisition_transport_timing.md) before applying any historical architecture or rate claim below. Independent serial links, native USB, hardware-timed acquisition and source-event timestamps must be assessed separately. The [ADS1115 note](12_ads1115_evt0_candidate.md) is historical and inactive, not a current build instruction.
